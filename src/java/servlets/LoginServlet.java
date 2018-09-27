@@ -24,13 +24,14 @@ public class LoginServlet extends HttpServlet {
         }
         else
         {
-            request.setAttribute("", this);
+            request.setAttribute("${userName}", username.getAttribute("userName"));
         }
     }
     
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession session = request.getSession();
         String username = request.getParameter("userName");
         String password = request.getParameter("password");
         UserService usr = new UserService();
@@ -38,7 +39,13 @@ public class LoginServlet extends HttpServlet {
         if(username.equals(" ") || username == null || password.equals("") || password == null || (usr.login(username, password)==null))
         {
             request.setAttribute("invalidLogin", "Invalid login");
+            request.setAttribute("${userName}", username);
             request.getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
+        }
+        else
+        {
+            session.setAttribute("userName", username);
+            response.sendRedirect("home");
         }
         
     }
