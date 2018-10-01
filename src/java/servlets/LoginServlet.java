@@ -4,6 +4,7 @@ import domain.User;
 import domain.UserService;
 import java.io.IOException;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,14 +18,22 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession username = request.getSession();
-        if(username.getAttribute("userName") == null)
+        if(request.getSession().getAttribute("userName") == null)
         {
+            Cookie[] cookies = request.getCookies();
+            for(int i=0;i<cookies.length;i++)
+            {
+                if(cookies[i].getName().equals("username"))
+                {
+                    request.setAttribute("userName", cookies[i].getValue());
+                    request.setAttribute("rememberMe", true);
+                }
+            }
             request.getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
         }
         else
         {
-            request.setAttribute("${userName}", username.getAttribute("userName"));
+            response.sendRedirect("home");
         }
     }
     
@@ -36,7 +45,7 @@ public class LoginServlet extends HttpServlet {
         String password = request.getParameter("password");
         UserService usr = new UserService();
         
-        if(username.equals(" ") || username == null || password.equals("") || password == null || (usr.login(username, password)==null))
+        if(username.equals("") || username == null || password.equals("") || password == null || (usr.login(username, password)==null))
         {
             request.setAttribute("invalidLogin", "Invalid login");
             request.setAttribute("${userName}", username);
@@ -45,6 +54,8 @@ public class LoginServlet extends HttpServlet {
         else
         {
             session.setAttribute("userName", username);
+            Cookie c = new Cookie("username", username);
+            response.addCookie(c);
             response.sendRedirect("home");
         }
         

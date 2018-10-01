@@ -18,11 +18,18 @@ public class HomeServlet extends HttpServlet {
             throws ServletException, IOException {
         HttpSession username = request.getSession();
         
-        if(username == null)
+        if(!(request.getParameter("logout") == null))
         {
-            response.sendRedirect("/WEB-INF/login.jsp");
+            username.setAttribute("userName", null);
+            request.getSession().invalidate();
+            request.getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
         }
-        else
+        
+        if(username.getAttribute("userName") == null)
+        {
+            response.sendRedirect("login");
+        }
+        else if(!(username.getAttribute("userName") == null))
         {
             request.getRequestDispatcher("/WEB-INF/home.jsp").forward(request, response);
         }
