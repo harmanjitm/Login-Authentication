@@ -21,6 +21,7 @@ public class HomeServlet extends HttpServlet {
         if(!(request.getParameter("logout") == null))
         {
             username.setAttribute("userName", null);
+            request.setAttribute("invalidLogin", "You have successfully logged out.");
             request.getSession().invalidate();
             response.sendRedirect("login");
             //request.getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
