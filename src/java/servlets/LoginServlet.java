@@ -1,6 +1,5 @@
 package servlets;
 
-import domain.User;
 import domain.UserService;
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -17,7 +16,7 @@ import javax.servlet.http.HttpSession;
 public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException {  
         if(request.getSession().getAttribute("userName") == null)
         {
             Cookie[] cookies = request.getCookies();
@@ -26,7 +25,7 @@ public class LoginServlet extends HttpServlet {
                 if(cookies[i].getName().equals("username"))
                 {
                     request.setAttribute("userName", cookies[i].getValue());
-                    request.setAttribute("rememberMe", true);
+                    request.setAttribute("rememberMe", "checked");
                 }
             }
             request.getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
@@ -54,8 +53,11 @@ public class LoginServlet extends HttpServlet {
         else
         {
             session.setAttribute("userName", username);
-            Cookie c = new Cookie("username", username);
-            response.addCookie(c);
+            if(request.getParameter("rememberMe") != null)
+            {
+                Cookie c = new Cookie("username", username);
+                response.addCookie(c);
+            }
             response.sendRedirect("home");
         }
         

@@ -17,7 +17,7 @@
             Username: <input type="text" name="userName" value="${userName}"><br>
             Password: <input type="password" name="password"><br>
             <input type="submit" value="Login"><br>
-            <input type="checkbox" name="rememberMe" value="rememberMe">Remember me<br>
+            <input type="checkbox" name="rememberMe" value="${rememberMe}" ${rememberMe}>Remember me<br>
         </form>
         <div>
             ${invalidLogin}

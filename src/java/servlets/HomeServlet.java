@@ -22,10 +22,10 @@ public class HomeServlet extends HttpServlet {
         {
             username.setAttribute("userName", null);
             request.getSession().invalidate();
-            request.getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
+            response.sendRedirect("login");
+            //request.getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
         }
-        
-        if(username.getAttribute("userName") == null)
+        else if(username.getAttribute("userName") == null)
         {
             response.sendRedirect("login");
         }
